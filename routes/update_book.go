@@ -14,11 +14,11 @@ import (
 func UpdateBook(c *gin.Context) {
 
 	var ctx = context.TODO()
-	client := db_helper.ConnectDB()
-	database := db_helper.GetDatabase(client, "Book_Store")
+	// client := db_helper.ConnectDB()
+	database := db_helper.GetDatabase(db_helper.Client, "Book_Store")
 	collection := db_helper.GetCollection(database, "tbl_Book")
 
-	existBook := new(model.Book)
+	bookRequest := new(model.BookRequest)
 
 	// if err:=c.BindJSON(&existBook); err != nil{
 	// 	c.JSON(http.StatusBadRequest, gin.H{"message":err.Error()})
@@ -35,15 +35,37 @@ func UpdateBook(c *gin.Context) {
 		return
 	}
 
-	if err := c.BindJSON(&existBook); err != nil {
+	if err := c.BindJSON(&bookRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+	}
+
+	existedBook := model.Book{
+		Id: id,
+	}
+
+	if bookRequest.Author != nil {
+		existedBook.Author = *bookRequest.Author
+	}
+
+	if bookRequest.Title != nil {
+		existedBook.Title = *bookRequest.Title
+	}
+
+	if bookRequest.Price != nil {
+		existedBook.Price = *bookRequest.Price
+	}
+
+	if bookRequest.Created_By != nil {
+		existedBook.Created_By = *bookRequest.Created_By
+	}
+
+	if bookRequest.Updated_By != nil {
+		existedBook.Updated_By = *bookRequest.Updated_By
 	}
 
 	filter := bson.M{"_id": id}
 
-	edited := bson.M{"Author": existBook.Author, "Title": existBook.Title, "Price": existBook.Price, "Is_Deleted": existBook.Is_Deleted, "Updated_By": existBook.Updated_By, "Created_By": existBook.Created_By}
-
-	result, err := collection.UpdateOne(ctx, filter, bson.M{"$set": edited})
+	result, err := collection.UpdateOne(ctx, filter, bson.M{"$set": existedBook})
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

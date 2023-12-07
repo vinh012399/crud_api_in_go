@@ -4,9 +4,15 @@ import (
 	routes "service/routes"
 
 	"github.com/gin-gonic/gin"
+
+	client "service/db_helper"
 )
 
 func main() {
+
+	if err := client.ConnectDB(); err != nil {
+		panic(err)
+	}
 
 	router := gin.Default()
 
@@ -29,4 +35,5 @@ func main() {
 	router.DELETE("/delete", routes.DeleteBook)
 
 	router.Run()
+
 }

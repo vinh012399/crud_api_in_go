@@ -14,8 +14,7 @@ import (
 func GetBooks(c *gin.Context) {
 
 	var ctx = context.TODO()
-	client := db_helper.ConnectDB()
-	database := db_helper.GetDatabase(client, "Book_Store")
+	database := db_helper.GetDatabase(db_helper.Client, "Book_Store")
 	collection := db_helper.GetCollection(database, "tbl_Book")
 
 	//find books
@@ -40,8 +39,8 @@ func GetBooks(c *gin.Context) {
 func GetBookByID(c *gin.Context) {
 
 	var ctx = context.TODO()
-	client := db_helper.ConnectDB()
-	database := db_helper.GetDatabase(client, "Book_Store")
+	// client := db_helper.ConnectDB()
+	database := db_helper.GetDatabase(db_helper.Client, "Book_Store")
 	collection := db_helper.GetCollection(database, "tbl_Book")
 
 	idParam := c.Query("id")
@@ -53,7 +52,7 @@ func GetBookByID(c *gin.Context) {
 		return
 	}
 
-	var book bson.M
+	var book model.Book
 
 	// Find book by ID
 	err = collection.FindOne(ctx, bson.D{{Key: "_id", Value: newId}}).Decode(&book)

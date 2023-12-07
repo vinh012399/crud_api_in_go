@@ -13,8 +13,8 @@ import (
 func DeleteBook(c *gin.Context) {
 
 	var ctx = context.TODO()
-	client := db_helper.ConnectDB()
-	database := db_helper.GetDatabase(client, "Book_Store")
+	// client := db_helper.ConnectDB()
+	database := db_helper.GetDatabase(db_helper.Client, "Book_Store")
 	collection := db_helper.GetCollection(database, "tbl_Book")
 
 	id := c.Query("id")

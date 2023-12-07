@@ -2,7 +2,6 @@ package db_helper
 
 import (
 	"context"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -10,17 +9,24 @@ import (
 
 const uri = "mongodb+srv://duyvinh012399:01869768563@cluster0.wptzgjf.mongodb.net/?retryWrites=true&w=majority"
 
-func ConnectDB() *mongo.Client {
+var Client *mongo.Client
 
-	clientOptions := options.Client().ApplyURI(uri)
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+func ConnectDB() error {
+	bsonOpts := &options.BSONOptions{
+		OmitZeroStruct: true,
+	}
+	clientOptions := options.Client().ApplyURI(uri).SetBSONOptions(bsonOpts)
+
+	var err error
+
+	Client, err = mongo.Connect(context.TODO(), clientOptions)
 
 	if err != nil {
-		fmt.Println(err.Error())
+		return err
 	}
 
 	// _, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	// defer cancel()
 
-	return client
+	return nil
 }
