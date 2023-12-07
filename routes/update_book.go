@@ -41,7 +41,7 @@ func UpdateBook(c *gin.Context) {
 
 	filter := bson.M{"_id": id}
 
-	edited := bson.M{"Author": existBook.Author, "Title": existBook.Title, "Created_By": existBook.Created_By}
+	edited := bson.M{"Author": existBook.Author, "Title": existBook.Title, "Price": existBook.Price, "Is_Deleted": existBook.Is_Deleted, "Updated_By": existBook.Updated_By, "Created_By": existBook.Created_By}
 
 	result, err := collection.UpdateOne(ctx, filter, bson.M{"$set": edited})
 
@@ -52,8 +52,9 @@ func UpdateBook(c *gin.Context) {
 
 	res := map[string]interface{}{"data": result}
 
-	if result.MathchedCount < 1 {
+	if result.MatchedCount < 1 {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "Data doesn't exist"})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Updated successfully", "Data": res})

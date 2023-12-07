@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-
 	routes "service/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -23,9 +23,10 @@ func main() {
 	router.GET("/getAllBooks", routes.GetBooks)
 
 	router.POST("/createBook", routes.CreateBook)
-	// router.POST("/create_books",createBooks)
 
-	// router.DELETE("/delete", DeleteBook)
+	router.POST("/updateBook", routes.UpdateBook)
+
+	router.DELETE("/delete", routes.DeleteBook)
 
 	router.Run()
 }
